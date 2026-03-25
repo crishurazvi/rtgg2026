@@ -1,5 +1,5 @@
-import streamlit as st from collections 
-import OrderedDict
+import streamlit as st 
+from collections import OrderedDict
 
 st.set_page_config( page_title="Mon Itinéraire Congrès", page_icon="🩺", layout="centered", initial_sidebar_state="collapsed", )
 
