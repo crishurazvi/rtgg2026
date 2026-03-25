@@ -1,123 +1,113 @@
-import streamlit as st
-import pandas as pd
+import streamlit as st from collections import OrderedDict
 
-st.set_page_config(page_title="Mon Programme RTG 2026", page_icon="⏱️", layout="centered")
+st.set_page_config( page_title="Mon Itinéraire Congrès", page_icon="🩺", layout="centered", initial_sidebar_state="collapsed", )
 
-st.title("🫀 My Personal RTG 2026 Schedule")
-st.markdown("Alege sesiunile la care vrei să participi pentru a ști exact în ce sală să mergi.")
+=========================
 
-# Baza de date cu programul extras din PDF (Aperçu)
-schedule_data = {
-    "Mardi 31 Mars 2026": {
-        "08h30 - 09h30": [
-            "Salle Louis ARMAND | GACI Basic: Maîtriser les voies d'abord",
-            "Salle Friedrich LIST | GACI Advanced: Imagerie endocoronaire",
-            "Salle George STEPHENSON | GACI Expert: TAVI dans les situations particulières"
-        ],
-        "09h40 - 10h40": [
-            "Salle Louis ARMAND | SESSION COMMUNE: Controverses dans les SCA"
-        ],
-        "11h10 - 12h10": [
-            "Salle Louis ARMAND | GACI Basic: Physiologie coronaire",
-            "Salle Friedrich LIST | Session TUC: AVC / GACI Advanced: Bifurcations",
-            "Salle George STEPHENSON | GACI Expert: Occlusions coronaires / Session TUC: Thrombose"
-        ],
-        "13h30 - 14h45": [
-            "Salle Louis ARMAND | Atelier débat Medtronic: Traiter une bifurcation"
-        ],
-        "15h00 - 16h00": [
-            "Salle Louis ARMAND | SESSION COMMUNE: Valvulopathies",
-            "Salle George STEPHENSON | ATELIER PARAMED: Défi ECG"
-        ],
-        "16h30 - 17h30": [
-            "Salle Louis ARMAND | SESSION COMMUNE: Antiagrégants plaquettaires parentéraux"
-        ],
-        "17h45 - 18h45": [
-            "Salle Louis ARMAND | GACI Advanced: Mon angioplastie se complique",
-            "Salle Friedrich LIST | SESSION TUC: Ablation de la FA",
-            "Salle George STEPHENSON | GACI Expert: Mon TAVI se complique"
-        ],
-        "19h00 - 21h30": [
-            "Toutes les Salles | Soirée Simulation GACI (Ateliers pratiques)"
-        ]
-    },
-    "Mercredi 1er Avril 2026": {
-        "08h30 - 09h30": [
-            "Salle Louis ARMAND | GACI Basic: Coronarographies complexes / Session Commune",
-            "Salle Friedrich LIST | SESSION TUC: HTA",
-            "Salle George STEPHENSON | GACI Expert: Réparation mitrale"
-        ],
-        "09h40 - 10h40": [
-            "Salle George STEPHENSON | ATELIER PARAMED: Le quiz des médicaments"
-        ],
-        "11h10 - 12h25": [
-            "Salle Louis ARMAND | GACI Basic: Bifurcations",
-            "Salle Friedrich LIST | GACI Advanced: Mon premier TAVI"
-        ],
-        "12h35 - 13h50": [
-            "Salle Louis ARMAND | SESSION COMMUNE: Choc cardiogénique du STEMI"
-        ],
-        "14h00 - 15h00": [
-            "Salle Louis ARMAND | GACI Advanced: Lésions calcifiées",
-            "Salle Friedrich LIST | SESSION TUC: Insuffisance cardiaque",
-            "Salle George STEPHENSON | GACI Expert: TAVI avec abords complexes"
-        ],
-        "15h30 - 16h30": [
-            "Salle Louis ARMAND | SESSION COMMUNE: Arrêt cardiaque - Place de l'IA"
-        ],
-        "16h40 - 17h40": [
-            "Salle Louis ARMAND | GACI Basic: L'angoisse de mes premières astreintes",
-            "Salle Friedrich LIST | GACI Advanced: Traitements percutanés de l'embolie pulmonaire",
-            "Salle George STEPHENSON | SESSION TUC: Atelier ECG"
-        ],
-        "17h45 - 18h45": [
-            "Salle Louis ARMAND | GACI Basic: Les lésions pluritronculaires",
-            "Salle Friedrich LIST | GACI Advanced: Angioplastie au ballon actif",
-            "Salle George STEPHENSON | GACI Expert: Réparation tricuspide"
-        ]
-    }
-}
+Données structurées du PDF
 
-# Creăm tab-uri pentru cele două zile
-tab_mardi, tab_mercredi = st.tabs(["Mardi 31 Mars", "Mercredi 1er Avril"])
+=========================
 
-# Dicționar pentru a salva alegerile tale
-my_schedule = {}
+CONGRESS_DATA = OrderedDict({ "Mardi 31 mars 2026": OrderedDict({ "08h30 - 09h30": [ {"room": "Louis ARMAND (Plénière)", "session": "GACI Parcours Basic : Maîtriser les voies d’abord"}, {"room": "Friedrich LIST", "session": "GACI Parcours Advanced : Imagerie endocoronaire"}, {"room": "George STEPHENSON", "session": "GACI Parcours Expert : TAVI dans les situations particulières"}, ], "09h40 - 10h40": [ {"room": "Louis ARMAND (Plénière)", "session": "Session commune TUC-GACI : Controverses dans les SCA"}, ], "10h40 - 11h10": [ {"room": "Pause", "session": "Pause"}, ], "11h10 - 12h10": [ {"room": "Louis ARMAND (Plénière)", "session": "GACI Parcours Expert : Occlusions coronaires chroniques"}, {"room": "Friedrich LIST", "session": "Session TUC : AVC, mieux gérer le parcours du patient"}, {"room": "George STEPHENSON", "session": "Atelier PARAMED 1 : IC, éducation thérapeutique, télésurveillance et IA"}, ], "12h20 - 13h20": [ {"room": "Louis ARMAND (Plénière)", "session": "GACI Parcours Basic : Physiologie coronaire"}, {"room": "Friedrich LIST", "session": "GACI Parcours Advanced : Bifurcations, les cas complexes"}, {"room": "George STEPHENSON", "session": "Session TUC : Thrombose dans tous ses états, de la prise en charge de l’urgence au suivi à long terme"}, ], "13h20 - 13h30": [ {"room": "Transition", "session": "Transition vers salles d’atelier débat / Lunch Bags"}, ], "13h30 - 14h45": [ {"room": "Louis ARMAND (Plénière)", "session": "Atelier débat Medtronic : Comment traiter une bifurcation en 2026 ?"}, {"room": "George STEPHENSON", "session": "Atelier PARAMED 2 : Défi ECG pour les paramédicaux"}, ], "15h00 - 16h00": [ {"room": "Louis ARMAND (Plénière)", "session": "Session commune TUC-GACI : Valvulopathies"}, ], "16h00 - 16h30": [ {"room": "Pause", "session": "Pause"}, ], "16h30 - 17h30": [ {"room": "Louis ARMAND (Plénière)", "session": "Session commune TUC-GACI : Antiagrégants plaquettaires parentéraux, indications, pratiques et gestion du risque"}, ], "17h45 - 18h45": [ {"room": "Friedrich LIST", "session": "Session TUC : Ablation de la FA, le traitement de référence ?"}, {"room": "Louis ARMAND (Plénière)", "session": "GACI Parcours Advanced : Mon angioplastie se complique"}, {"room": "George STEPHENSON", "session": "GACI Parcours Expert : Mon TAVI se complique"}, ], "19h00 - 21h30": [ {"room": "Louis ARMAND (Plénière)", "session": "Soirée Simulation : ABBOTT – Fermeture de FOP avec Amplatzer Talisman / Navitor sur simulateur à cœur battant / Athérectomie orbitale / Bifurcation provisionnel dans le tronc commun"}, {"room": "Friedrich LIST", "session": "Soirée Simulation : J&J – Impella"}, {"room": "Friedrich LIST", "session": "Soirée Simulation : MEDTRONIC – Lésions de bifurcation, simulation sur banc"}, {"room": "George STEPHENSON", "session": "Soirée Simulation : BOSTON SCIENTIFIC – Lésions calcifiées, l’indispensable Rota / Imagerie endocoronaire, adoptez l’IVUS en 3 étapes"}, {"room": "Mezzanine", "session": "Soirée Simulation : GE HEALTHCARE – Formation au post-traitement du scanner cardiaque"}, {"room": "Salle à préciser", "session": "Soirée Simulation : THERENVA – Sizing TAVI"}, ], }), "Mercredi 1er avril 2026": OrderedDict({ "08h30 - 09h30": [ {"room": "Louis ARMAND (Plénière)", "session": "GACI Parcours Basic : Coronarographies, les situations complexes"}, {"room": "Friedrich LIST", "session": "Session TUC : HTA, quoi de neuf ?"}, {"room": "George STEPHENSON", "session": "GACI Parcours Expert : Ma première réparation mitrale bord à bord"}, ], "09h40 - 10h40": [ {"room": "Louis ARMAND (Plénière)", "session": "Session commune TUC-GACI : Cas cliniques, les complications qui enseignent"}, {"room": "George STEPHENSON (Bobigny)", "session": "Atelier PARAMED 3 : Le quiz des médicaments de l’urgence cardiologique !"}, ], "10h40 - 11h10": [ {"room": "Pause", "session": "Pause"}, ], "11h10 - 12h25": [ {"room": "Louis ARMAND (Plénière)", "session": "GACI Parcours Basic : Bifurcations, les fondamentaux"}, {"room": "Friedrich LIST", "session": "GACI Parcours Advanced : Mon premier TAVI"}, {"room": "George STEPHENSON", "session": "Session TUC : Myocardites / péricardites"}, ], "12h25 - 12h35": [ {"room": "Transition", "session": "Transition vers salles d’atelier débat / Lunch Bags"}, ], "12h35 - 13h50": [ {"room": "Louis ARMAND (Plénière)", "session": "Session commune TUC-GACI avec soutien institutionnel J&J : Choc cardiogénique du STEMI"}, {"room": "George STEPHENSON", "session": "Atelier PARAMED 4 : Angioplastie des lésions calcifiées, comment faire en pratique ?"}, ], "14h00 - 15h00": [ {"room": "Louis ARMAND (Plénière)", "session": "GACI Parcours Advanced : Lésions calcifiées"}, {"room": "Friedrich LIST", "session": "Session TUC : Insuffisance cardiaque, gestion de la décompensation"}, {"room": "George STEPHENSON", "session": "GACI Parcours Expert : TAVI avec abords complexes"}, ], "15h00 - 15h30": [ {"room": "Pause", "session": "Pause"}, ], "15h30 - 16h30": [ {"room": "Louis ARMAND (Plénière)", "session": "Session commune : Arrêt cardiaque, place de l’IA"}, ], "16h40 - 17h40": [ {"room": "Louis ARMAND (Plénière)", "session": "GACI Parcours Basic : L’angoisse de mes premières astreintes"}, {"room": "Friedrich LIST", "session": "GACI Parcours Advanced : Traitements percutanés de l’embolie pulmonaire"}, {"room": "George STEPHENSON", "session": "Session TUC : Atelier ECG, et si c’était pas la coronaire ?"}, ], "17h45 - 18h45": [ {"room": "Louis ARMAND (Plénière)", "session": "GACI Parcours Basic : Les lésions pluritronculaires"}, {"room": "Friedrich LIST", "session": "GACI Parcours Advanced : Angioplastie au ballon actif"}, {"room": "George STEPHENSON", "session": "GACI Parcours Expert : Réparation tricuspide bord à bord"}, ], }), })
 
-def build_day_schedule(day_name, data):
-    st.header(f"📅 {day_name}")
-    for time_slot, options in data.items():
-        # Adăugăm opțiunea de a nu merge la nimic în acel interval
-        choices = ["☕ Pauză / Nu particip"] + options
-        
-        # Selectbox pentru fiecare oră
-        selected = st.selectbox(
-            f"🕒 {time_slot}", 
-            options=choices,
-            key=f"{day_name}_{time_slot}"
+PAUSE_LABEL = "☕ Pauză / Nu particip"
+
+=========================
+
+Helpers
+
+=========================
+
+def option_label(item: dict) -> str: return f"{item['room']} | {item['session']}"
+
+def init_state(): for day, slots in CONGRESS_DATA.items(): for time_range in slots.keys(): key = f"choice::{day}::{time_range}" if key not in st.session_state: st.session_state[key] = PAUSE_LABEL
+
+def get_selected_items(): selected = [] for day, slots in CONGRESS_DATA.items(): for time_range, sessions in slots.items(): key = f"choice::{day}::{time_range}" value = st.session_state.get(key, PAUSE_LABEL) if value != PAUSE_LABEL: match = next((s for s in sessions if option_label(s) == value), None) if match: selected.append({ "day": day, "time": time_range, "room": match["room"], "session": match["session"], }) return selected
+
+def render_mobile_card(item: dict): st.markdown( f""" <div style="
+background: rgba(255,255,255,0.04);
+border: 1px solid rgba(250,250,250,0.12);
+border-radius: 16px;
+padding: 14px 14px 12px 14px;
+margin-bottom: 10px;
+"> <div style="font-size: 0.95rem; opacity: 0.88; margin-bottom: 6px;"> 🗓️ {item['day']}  •  ⏰ {item['time']} </div> <div style="font-size: 1.02rem; line-height: 1.45; font-weight: 700;"> 📍 {item['room']}<br>{item['session']} </div> </div> """, unsafe_allow_html=True, )
+
+=========================
+
+Style
+
+=========================
+
+st.markdown( """ <style> .block-container { padding-top: 1rem; padding-bottom: 5rem; max-width: 760px; } h1, h2, h3 { letter-spacing: -0.02em; } .stTabs [data-baseweb="tab-list"] { gap: 0.35rem; flex-wrap: wrap; } .stTabs [data-baseweb="tab"] { border-radius: 12px; padding: 0.55rem 0.9rem; height: auto; } div[data-testid="stSelectbox"] > label { font-weight: 700; } @media (max-width: 640px) { .block-container { padding-left: 0.9rem; padding-right: 0.9rem; } h1 { font-size: 1.65rem !important; } h2 { font-size: 1.25rem !important; } } </style> """, unsafe_allow_html=True, )
+
+init_state()
+
+=========================
+
+Header
+
+=========================
+
+st.title("🩺 Mon assistant congrès") st.caption("Construis ton itinéraire perso, créneau par créneau.")
+
+with st.container(border=True): st.markdown( "📍 Congrès : Les Rencontres TUC-GACI 2026  \n" "🏛️ Lieu : UIC-P Espaces Congrès, Paris  \n" "📱 Astuce : choisis une session à chaque horaire, puis descends voir ton itinéraire final optimisé pour le téléphone." )
+
+=========================
+
+Tabs par jour
+
+=========================
+
+days = list(CONGRESS_DATA.keys()) tabs = st.tabs([f"📅 {day}" for day in days])
+
+for tab, day in zip(tabs, days): with tab: st.subheader(day) for time_range, sessions in CONGRESS_DATA[day].items(): st.markdown(f"### ⏰ {time_range}")
+
+options = [PAUSE_LABEL] + [option_label(s) for s in sessions if s["room"] not in {"Pause", "Transition"}]
+
+        if len(options) == 1:
+            if sessions[0]["room"] == "Pause":
+                st.info("☕ Pause")
+            elif sessions[0]["room"] == "Transition":
+                st.warning("🚶 Transition / changement de salle / Lunch Bags")
+            else:
+                st.info(option_label(sessions[0]))
+            continue
+
+        key = f"choice::{day}::{time_range}"
+        current_value = st.session_state.get(key, PAUSE_LABEL)
+        default_index = options.index(current_value) if current_value in options else 0
+
+        st.selectbox(
+            label=f"Choix pour {time_range}",
+            options=options,
+            index=default_index,
+            key=key,
+            label_visibility="collapsed",
         )
-        if selected != "☕ Pauză / Nu particip":
-            my_schedule[f"{day_name} | {time_slot}"] = selected
 
-with tab_mardi:
-    build_day_schedule("Mardi 31 Mars 2026", schedule_data["Mardi 31 Mars 2026"])
+=========================
 
-with tab_mercredi:
-    build_day_schedule("Mercredi 1er Avril 2026", schedule_data["Mercredi 1er Avril 2026"])
+Itinéraire final
 
-st.markdown("---")
-st.header("📋 Itinerarul Meu Final")
+=========================
 
-if my_schedule:
-    st.success("Iată programul tău! Fă un screenshot sau lasă pagina deschisă pe telefon.")
-    for time_key, session in my_schedule.items():
-        day, time = time_key.split(" | ")
-        # Extragem sala pentru a o evidenția
-        sala, titlu = session.split(" | ")
-        
-        st.markdown(f"**{day} - {time}**")
-        st.markdown(f"📍 **{sala}** ➡️ {titlu}")
-        st.markdown("") # Spațiu
-else:
-    st.info("Încă nu ai selectat nicio sesiune. Alege sesiunile de mai sus pentru a-ți construi programul.")
-    
+st.markdown("---") st.header("🧭 Itinerarul Meu Final")
+
+selected_items = get_selected_items()
+
+if not selected_items: st.info("Nicio sesiune selectată încă. Alege din meniurile de mai sus și itinerarul apare automat aici.") else: for item in selected_items: render_mobile_card(item)
+
+st.download_button(
+    label="📥 Descarcă itinerarul în format texte",
+    data="\n\n".join(
+        [
+            f"{item['day']} | {item['time']}\n{item['room']}\n{item['session']}"
+            for item in selected_items
+        ]
+    ),
+    file_name="itinerar_congres_tuc_gaci_2026.txt",
+    mime="text/plain",
+    use_container_width=True,
+)
+
+with st.expander("🧱 Vezi structura de date Python"): st.code(repr(CONGRESS_DATA), language="python")
